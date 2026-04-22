@@ -5,198 +5,150 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fukuoka & Yakushima Travel 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
-        body { font-family: 'Space Mono', monospace; }
+        body { font-family: 'Space Mono', monospace; background-color: #F5F5DC; color: #000; }
         .brutal-border { border: 4px solid black; }
         .brutal-shadow { box-shadow: 8px 8px 0px 0px rgba(0,0,0,1); }
-        .brutal-shadow-hover:hover { box-shadow: none; transform: translate(4px, 4px); }
+        .brutal-shadow-hover:hover { box-shadow: none; transform: translate(4px, 4px); transition: all 0.1s; }
     </style>
 </head>
-<body>
-    <div id="root"></div>
+<body class="p-4 md:p-10 min-h-screen overflow-x-hidden">
 
-    <script type="text/babel">
-        const { useState, useEffect } = React;
+    <div id="app" class="max-w-2xl mx-auto relative z-10"></div>
 
-        const Icon = ({ name, size = 24, className = "" }) => {
-            return (
-                <i 
-                    data-lucide={name.toLowerCase().replace(/([a-z0-9])([A-Z])/g, '$1-$2')} 
-                    style={{ width: size, height: size }}
-                    className={`inline-block ${className}`}
-                ></i>
-            );
+    <script>
+        const tripData = {
+            1: { label: "DAY 01", date: "26/04 SUN", color: "#FFD966", rotate: "-rotate-1", width: "w-full", title: "福岡初見 ‧ 屋台巡禮", events: [
+                { time: "10:00", title: "香港國際機場 T1", loc: "HKG", desc: "抵達機場辦理 UO638 登機手續。" },
+                { time: "12:35", title: "UO638 起飛", loc: "HKG", desc: "準時起飛前往福岡。" },
+                { time: "17:00", title: "抵達福岡空港", loc: "Fukuoka Airport", desc: "領取行李後，乘地鐵至渡邊通站。" },
+                { time: "18:00", title: "福岡蒙特利酒店", loc: "ホテルモントレ福岡", desc: "辦理入住。" },
+                { time: "19:45", title: "晚餐：鰻櫃 和食備長", loc: "和食備長 中洲川端店", desc: "預約 19:45。品嚐名物鰻魚飯。" },
+                { time: "21:30", title: "中洲屋台散策", loc: "中洲屋台街", desc: "感受福岡夜生活。" }
+            ]},
+            2: { label: "DAY 02", date: "27/04 MON", color: "#A9D18E", rotate: "rotate-1", width: "w-[95%]", title: "飛向神之島 ‧ 觀瀑", events: [
+                { time: "13:00", title: "JAL 3673 起飛", loc: "Fukuoka Airport", desc: "福岡直飛屋久島。" },
+                { time: "14:05", title: "抵達屋久島空港", loc: "Yakushima Airport", desc: "正式展開屋久島行程。" },
+                { time: "14:30", title: "機場取車自駕", loc: "Nissan Rent-a-Car", desc: "辦理租車手續。" },
+                { time: "15:30", title: "田代別館 Check-in", loc: "田代別館", desc: "辦理入住。" },
+                { time: "16:30", title: "千尋之滝", loc: "千尋の滝", desc: "壯麗的花崗岩瀑布。" }
+            ]},
+            3: { label: "DAY 03", date: "28/04 TUE", color: "#FF9494", rotate: "-rotate-2", width: "w-full", title: "森林極致 ‧ 雙樂園巡禮", events: [
+                { time: "08:00", title: "白谷雲水峽 & 太鼓岩", loc: "白谷雲水峡", desc: "苔之森探險並登上太鼓岩俯瞰美景。" },
+                { time: "12:30", title: "午餐：當地料理", loc: "安房地區", desc: "於安房附近享用午餐。" },
+                { time: "13:30", title: "屋久杉森林樂園", loc: "ヤクスギランド", desc: "漫步在千年屋久杉之間。" },
+                { time: "16:00", title: "西部林道", loc: "西部林道", desc: "尋找野生屋久鹿與屋久猿。" },
+                { time: "18:30", title: "晚餐：當地料理", loc: "宮之浦地區", desc: "享用屋久島在地海鮮料理。" }
+            ]},
+            4: { label: "DAY 04", date: "29/04 WED", color: "#C5E0B4", rotate: "rotate-2", width: "w-[92%]", title: "重返福岡 ‧ 鋼彈購物", events: [
+                { time: "09:00", title: "屋久杉自然館", loc: "屋久杉自然館", desc: "深入了解屋久杉歷史。" },
+                { time: "11:30", title: "前往機場 & 還車", loc: "Yakushima Airport", desc: "辦理還車手續。" },
+                { time: "12:35", title: "JAL 3676 起飛", loc: "Yakushima Airport", desc: "由屋久島返回福岡。" },
+                { time: "14:30", title: "博多新大谷飯店 Check-in", loc: "ホテルニューオータニ博多", desc: "辦理入住並存放行李。" },
+                { time: "16:00", title: "LaLaport 福岡", loc: "LaLaport Fukuoka", desc: "購物及欣賞 1:1 實體大鋼彈。" },
+                { time: "20:30", title: "晚餐：肉屋肉一", loc: "肉屋肉一 博多店", desc: "預約 20:30。享用優質和牛燒肉。" }
+            ]},
+            5: { label: "DAY 05", date: "30/04 THU", color: "#BDD7EE", rotate: "rotate-1", width: "w-full", title: "城跡與天神核心購物", events: [
+                { time: "11:00", title: "午餐：鰻魚四代目菊川", loc: "鰻 4代目菊川 中洲春吉店", desc: "預約 11:00。品嚐名物一本鰻。" },
+                { time: "13:30", title: "福岡城 天守台跡", loc: "福岡城 天守台", desc: "登高俯瞰福岡市景。" },
+                { time: "15:00", title: "福岡市美術館", loc: "福岡市美術館", desc: "欣賞大濠公園內的藝文氛圍。" },
+                { time: "16:30", title: "大濠公園 日本庭園", loc: "大濠公園 日本庭園", desc: "精緻的池泉回遊式庭園。" },
+                { time: "18:00", title: "SOLARIA PLAZA", loc: "ソラリアプラザ", desc: "天神核心地標，匯集眾多精品服飾與生活品牌。" }
+            ]},
+            6: { label: "DAY 06", date: "01/05 FRI", color: "#F4B183", rotate: "-rotate-1", width: "w-[98%]", title: "購物散策 ‧ 歸途", events: [
+                { time: "10:00", title: "博多車站/天神 自由活動", loc: "博多駅", desc: "悠閒散步或進行最後採買。" },
+                { time: "11:45", title: "午餐：博多華味鳥 博多駅筑紫口店", loc: "福岡市博多区博多駅東1-13-31 駅東サンシティビル1F", desc: "預約 11:45。享用博多名物水炊鍋 (Hana Midori)。" },
+                { time: "13:30", title: "博多運河城", loc: "キャナルシティ博多", desc: "逛街購物、看噴水秀。" },
+                { time: "16:30", title: "博多車站 伴手禮", loc: "博多駅", desc: "最後補齊名產與藥妝。" },
+                { time: "18:30", title: "前往機場", loc: "Fukuoka Airport", desc: "辦理 UO695 登機手續。" },
+                { time: "20:35", title: "UO695 起飛", loc: "Fukuoka Airport", desc: "起飛返回香港。" }
+            ]}
         };
 
-        const App = () => {
-            const [currentPage, setCurrentPage] = useState('home');
-            const [selectedDay, setSelectedDay] = useState(null);
+        function renderHome() {
+            const app = document.getElementById('app');
+            let html = `
+                <header class="bg-[#A9D18E] brutal-border brutal-shadow p-8 mb-16 -rotate-2 relative">
+                    <div class="absolute -top-6 -right-6 bg-black text-white p-3 rotate-12 font-bold text-xs">CONFIRMED 2026</div>
+                    <p class="text-sm font-bold mb-1 underline underline-offset-4">APR 26 - MAY 01</p>
+                    <h1 class="text-6xl md:text-7xl font-bold uppercase tracking-tighter leading-[0.85]">
+                        FUKUOKA<br><span class="text-[#FFD966]">YAKUSHIMA</span>
+                    </h1>
+                </header>
+                <div class="flex flex-col gap-10">
+            `;
 
-            useEffect(() => {
-                if (window.lucide) {
-                    window.lucide.createIcons();
-                }
+            Object.keys(tripData).forEach((key, index) => {
+                const day = tripData[key];
+                html += `
+                    <div class="flex ${index % 2 === 0 ? 'justify-start' : 'justify-end'}">
+                        <button onclick="renderDetail(${key})" class="${day.width} ${day.rotate} bg-white brutal-border brutal-shadow brutal-shadow-hover p-0 flex flex-col">
+                            <div class="w-full py-2 px-4 border-b-[4px] border-black font-bold flex justify-between items-center" style="background-color: ${day.color}">
+                                <span>${day.label}</span>
+                                <span class="text-xs uppercase">${day.date}</span>
+                            </div>
+                            <div class="p-6 text-left">
+                                <h3 class="text-2xl md:text-3xl font-bold uppercase leading-tight tracking-tighter">${day.title}</h3>
+                            </div>
+                        </button>
+                    </div>
+                `;
             });
 
-            const tripData = {
-                1: {
-                    label: "DAY 01", date: "26/04 SUN", color: "#FFD966", width: "w-full", rotate: "-rotate-1",
-                    title: "福岡初見 ‧ 屋台巡禮",
-                    events: [
-                        { time: "10:30", title: "香港國際機場", loc: "Hong Kong International Airport", desc: "抵達機場辦理登機手續。" },
-                        { time: "12:55", title: "香港出發 (UO/CX)", loc: "HKG", desc: "起飛前往福岡。" },
-                        { time: "17:00", title: "抵達福岡空港", loc: "Fukuoka Airport", desc: "領取行李後，乘地鐵至渡邊通站。" },
-                        { time: "18:00", title: "福岡蒙特利酒店", loc: "ホテルモントレ福岡", desc: "辦理入住。酒店位於渡邊通，交通便利。" },
-                        { time: "19:45", title: "晚餐：鰻櫃 和食備長", loc: "ひつまぶし和食備長 中洲川端店", desc: "預約 19:45。品嚐名物鰻魚飯三吃。" },
-                        { time: "21:30", title: "中洲屋台散策", loc: "中洲屋台街", desc: "飯後在那珂川邊感受福岡夜生活氣氛。" }
-                    ]
-                },
-                2: {
-                    label: "DAY 02", date: "27/04 MON", color: "#A9D18E", width: "w-[92%]", rotate: "rotate-1",
-                    title: "飛向神之島 ‧ 觀瀑",
-                    events: [
-                        { time: "13:00", title: "JAL 3673 起飛", loc: "Fukuoka Airport Domestic Terminal", desc: "福岡直飛屋久島。" },
-                        { time: "14:05", title: "抵達屋久島空港", loc: "Yakushima Airport", desc: "正式展開屋久島行程。" },
-                        { time: "14:30", title: "機場取車自駕", loc: "Nissan Rent-a-Car Yakushima", desc: "前往 日產レンタカー 辦理租車手續。" },
-                        { time: "15:30", title: "田代別館 Check-in", loc: "田代別館", desc: "前往酒店辦理入住。" },
-                        { time: "16:30", title: "千尋之滝 & 托羅奇瀑布", loc: "千尋の滝", desc: "壯麗的花崗岩瀑布。" }
-                    ]
-                },
-                3: {
-                    label: "DAY 03", date: "28/04 TUE", color: "#FF9494", width: "w-full", rotate: "-rotate-2",
-                    title: "幽林探險 ‧ 海角燈塔",
-                    events: [
-                        { time: "09:00", title: "白谷雲水峽", loc: "白谷雲水峡", desc: "苔之森巡禮。建議走過「太鼓岩」俯瞰全景。" },
-                        { time: "14:30", title: "西部林道 & 大川之滝", loc: "大川の滝", desc: "穿越世遺森林看野生鹿猴。" },
-                        { time: "16:30", title: "屋久島燈塔", loc: "屋久島灯台", desc: "純白燈塔對望海洋，視野絕佳。" },
-                        { time: "19:00", title: "晚餐：海の恵み", loc: "地魚料理 海の恵み", desc: "推薦首折鯖魚刺身與炸飛魚料理。" }
-                    ]
-                },
-                4: {
-                    label: "DAY 04", date: "29/04 WED", color: "#C5E0B4", width: "w-[88%]", rotate: "rotate-2",
-                    title: "鋼彈地標 ‧ 購物衝刺",
-                    events: [
-                        { time: "12:35", title: "JAL 3676 回福岡", loc: "Yakushima Airport", desc: "搭乘 JL3676 返回福岡。" },
-                        { time: "13:40", title: "抵達福岡空港", loc: "Fukuoka Airport", desc: "抵達後前往市區。" },
-                        { time: "16:00", title: "LaLaport 福岡", loc: "LaLaport Fukuoka", desc: "購物及準備觀看鋼彈表演。" },
-                        { time: "19:00", title: "鋼彈立像夜間秀", loc: "三井ショッピングパーク ららぽーと福岡", desc: "19:00-21:00 每半小時一場燈光秀。" },
-                        { time: "20:30", title: "晚餐：肉屋肉一 博多店", loc: "肉屋肉一 博多店", desc: "預約 20:30。品嚐高品質和牛燒肉。" }
-                    ]
-                },
-                5: {
-                    label: "DAY 05", date: "30/04 THU", color: "#BDD7EE", width: "w-full", rotate: "rotate-1",
-                    title: "名物雞鍋 ‧ 太宰府巡禮",
-                    events: [
-                        { time: "11:30", title: "午餐：博多水炊鍋", loc: "博多華味鳥 博多駅筑紫口店", desc: "預約 11:30。以福岡代表性雞肉料理作為全日首個行程。" },
-                        { time: "14:00", title: "太宰府天滿宮", loc: "太宰府天滿宮", desc: "飯後前往參拜學問之神。" },
-                        { time: "16:30", title: "柳川遊船", loc: "柳川観光開發株式會社", desc: "體驗傍晚時分的護城河遊船。" },
-                        { time: "19:00", title: "返回福岡市區", loc: "天神/博多", desc: "自由活動或進行最後採購。" }
-                    ]
-                },
-                6: {
-                    label: "DAY 06", date: "01/05 FRI", color: "#F4B183", width: "w-[95%]", rotate: "-rotate-1",
-                    title: "最後散策 ‧ 歸途",
-                    events: [
-                        { time: "10:00", title: "大濠公園散步", loc: "大濠公園", desc: "湖邊喝咖啡。" },
-                        { time: "12:00", title: "最後購物/午餐", loc: "天神", desc: "自由活動，補購藥妝。" },
-                        { time: "14:00", title: "前往機場", loc: "Fukuoka Airport", desc: "結束 6 天之旅。" }
-                    ]
-                }
-            };
+            html += `</div>`;
+            app.innerHTML = html;
+            window.scrollTo(0, 0);
+        }
 
-            const handleDayClick = (day) => {
-                setSelectedDay(day);
-                setCurrentPage('detail');
-                window.scrollTo(0, 0);
-            };
-
-            const goHome = () => {
-                setCurrentPage('home');
-                window.scrollTo(0, 0);
-            };
-
-            return (
-                <div className="min-h-screen bg-[#F5F5DC] text-black p-4 md:p-10 relative overflow-x-hidden">
-                    {currentPage === 'home' && (
-                        <div className="max-w-2xl mx-auto relative z-10">
-                            <header className="bg-[#A9D18E] brutal-border brutal-shadow p-8 mb-16 -rotate-2 relative">
-                                <div className="absolute -top-6 -right-6 bg-black text-white p-3 rotate-12 font-bold text-xs">CONFIRMED 2026</div>
-                                <p className="text-sm font-bold mb-1 underline decoration-black underline-offset-4 tracking-tighter">APR 26 - MAY 01</p>
-                                <h1 className="text-6xl md:text-7xl font-bold uppercase tracking-tighter leading-[0.85]">
-                                    FUKUOKA<br />
-                                    <span className="text-[#FFD966]">YAKUSHIMA</span>
-                                </h1>
-                            </header>
-
-                            <div className="flex flex-col gap-10">
-                                {Object.keys(tripData).map((key, index) => (
-                                    <div key={key} className={`flex ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
-                                        <button
-                                            onClick={() => handleDayClick(key)}
-                                            className={`${tripData[key].width} ${tripData[key].rotate} relative bg-white brutal-border brutal-shadow brutal-shadow-hover transition-all p-0 flex flex-col`}
-                                        >
-                                            <div className="w-full py-2 px-4 border-b-[4px] border-black font-bold flex justify-between items-center" style={{ backgroundColor: tripData[key].color }}>
-                                                <span>{tripData[key].label}</span>
-                                                <span className="text-xs uppercase">{tripData[key].date}</span>
-                                            </div>
-                                            <div className="p-6 text-left">
-                                                <h3 className="text-2xl md:text-3xl font-bold uppercase leading-tight tracking-tighter">{tripData[key].title}</h3>
-                                            </div>
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    {currentPage === 'detail' && selectedDay && (
-                        <div className="max-w-2xl mx-auto relative z-10">
-                            <button onClick={goHome} className="mb-12 flex items-center gap-2 bg-white brutal-border brutal-shadow brutal-shadow-hover px-6 py-3 font-bold uppercase transition-all">
-                                <Icon name="ArrowLeft" size={20} /> 返回行程首頁
-                            </button>
-
-                            <div className="bg-[#FF9494] brutal-border brutal-shadow p-8 mb-12 rotate-1">
-                                <div className="flex justify-between items-start mb-4">
-                                    <span className="bg-black text-white px-4 py-1 font-bold text-xl">{tripData[selectedDay].label}</span>
-                                    <span className="font-bold text-xl border-b-4 border-black">{tripData[selectedDay].date}</span>
-                                </div>
-                                <h2 className="text-5xl font-bold uppercase leading-none tracking-tighter">{tripData[selectedDay].title}</h2>
-                            </div>
-
-                            <div className="space-y-10">
-                                {tripData[selectedDay].events.map((event, index) => (
-                                    <div key={index} className="bg-white brutal-border brutal-shadow p-6 relative">
-                                        <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-6">
-                                            <div className="flex flex-col gap-3">
-                                                <div className="inline-block bg-[#A9D18E] brutal-border px-4 py-1 font-bold text-base w-fit -rotate-2">
-                                                    {event.time}
-                                                </div>
-                                                <h4 className="text-3xl font-bold uppercase leading-none tracking-tight">{event.title}</h4>
-                                            </div>
-                                            <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.loc)}`} target="_blank" className="flex items-center justify-center gap-2 bg-black text-white px-8 py-4 font-bold text-sm uppercase transition-all hover:bg-zinc-800">
-                                                Google Maps <Icon name="ExternalLink" size={18} />
-                                            </a>
-                                        </div>
-                                        <div className="border-t-[4px] border-black pt-5">
-                                            <p className="text-base font-bold leading-relaxed mb-4">{event.desc}</p>
-                                            <div className="inline-block bg-zinc-100 p-2 border-2 border-black text-[10px] font-bold uppercase">DEST: {event.loc}</div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
+        function renderDetail(dayKey) {
+            const app = document.getElementById('app');
+            const day = tripData[dayKey];
+            let html = `
+                <button onclick="renderHome()" class="mb-12 flex items-center gap-2 bg-white brutal-border brutal-shadow brutal-shadow-hover px-6 py-3 font-bold uppercase">
+                    <i data-lucide="arrow-left"></i> 返回清單
+                </button>
+                <div class="bg-[#FF9494] brutal-border brutal-shadow p-8 mb-12 rotate-1">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="bg-black text-white px-4 py-1 font-bold text-xl">${day.label}</span>
+                        <span class="font-bold text-xl border-b-4 border-black">${day.date}</span>
+                    </div>
+                    <h2 class="text-5xl font-bold uppercase leading-none tracking-tighter">${day.title}</h2>
                 </div>
-            );
-        };
+                <div class="space-y-10">
+            `;
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+            day.events.forEach(event => {
+                html += `
+                    <div class="bg-white brutal-border brutal-shadow p-6 relative">
+                        <div class="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-6">
+                            <div class="flex flex-col gap-3">
+                                <div class="inline-block bg-[#A9D18E] brutal-border px-4 py-1 font-bold text-base w-fit -rotate-2">${event.time}</div>
+                                <h4 class="text-3xl font-bold uppercase leading-none tracking-tight">${event.title}</h4>
+                            </div>
+                            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.loc)}" target="_blank" class="flex items-center justify-center gap-2 bg-black text-white px-8 py-4 font-bold text-sm uppercase hover:bg-zinc-800">
+                                地圖 <i data-lucide="external-link" class="w-4 h-4"></i>
+                            </a>
+                        </div>
+                        <div class="border-t-[4px] border-black pt-5">
+                            <p class="text-base font-bold leading-relaxed mb-4">${event.desc}</p>
+                            <div class="inline-block bg-zinc-100 p-2 border-2 border-black text-[10px] font-bold uppercase">目的地: ${event.loc}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+            app.innerHTML = html;
+            lucide.createIcons();
+            window.scrollTo(0, 0);
+        }
+
+        window.onload = () => {
+            renderHome();
+            lucide.createIcons();
+        };
     </script>
 </body>
 </html>
