@@ -15,11 +15,11 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
-        body {
-            background-color: #0a0a0a;
-            font-family: 'Playfair Display', serif;
-        }
-        .font-serif { font-family: 'Playfair Display', serif; }
+        body { background-color: #0a0a0a; font-family: 'Playfair Display', serif; }
+        .gold-text { color: #d4af37; }
+        .gold-border { border-color: #d4af37; }
+        .luxury-hover:hover { color: white; border-color: white; transform: translateY(-1px); }
+        .luxury-btn-hover:hover { background-color: #d4af37; color: black; border-color: #d4af37; }
     </style>
 </head>
 <body>
@@ -28,12 +28,9 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // Re-usable Icon Component for Lucide
         const Icon = ({ name, size = 16, className = "" }) => {
             useEffect(() => {
-                if (window.lucide) {
-                    window.lucide.createIcons();
-                }
+                if (window.lucide) window.lucide.createIcons();
             }, [name]);
             return <i data-lucide={name} className={className} style={{ width: size, height: size }}></i>;
         };
@@ -65,124 +62,118 @@
                 4: { label: "IV", date: "10 JUNE", title: "系島自駕 / 海岸漫遊", events: [
                     { time: "10:00", title: "系島海岸", loc: "櫻井二見ヶ浦", desc: "欣賞白色鳥居美景，享受慢節奏海岸自駕。" },
                     { time: "14:00", title: "午餐：白浜家", loc: "糸島 牡蠣小屋 白浜家", desc: "海邊享用新鮮海產料理。" },
-                    { time: "20:00", title: "晚餐：TBA", loc: "TBA", desc: "尚未決定，根據當日行程與心情彈性安排。" },
-                    { time: "STAY", title: "入住系島", loc: "Itoshita Tumugu", desc: "入住糸島特色旅宿「絲結」，享受自然靜謐的一晚。" }
+                    { time: "STAY", title: "入住系島", loc: "梅屋旅館", desc: "入住糸島特色旅宿，享受自然靜謐的一晚。" }
                 ]},
                 5: { label: "V", date: "11 JUNE", title: "悠閒全精華：日田自駕", events: [
-                    { time: "08:30", title: "糸島出發", loc: "Itoshita Tumugu", desc: "在民宿吃個悠閒早餐後出發。" },
+                    { time: "08:30", title: "糸島出發", loc: "梅屋旅館", desc: "在民宿吃個悠閒早餐後出發。" },
                     { time: "10:00", title: "福島八幡宮", loc: "福島八幡宮", desc: "位於八女市。欣賞精美的御朱印。" },
                     { time: "12:15", title: "大山水壩午餐", loc: "道の駅 水辺の郷おおやま", desc: "看進擊的巨人銅像並享用午餐。" },
-                    { time: "13:45", title: "巨人 Museum (一館)", loc: "進撃の巨人 in HITA ミュージアム", desc: "觀看早期原稿。" },
+                    { time: "13:45", title: "巨人 Museum (一館)", loc: "進撃の巨人 in HITA ミュージ亞姆", desc: "觀看早期原稿。" },
                     { time: "14:45", title: "巨人 Museum (二館)", loc: "サッポロビール九州日田工場", desc: "札幌啤酒工廠內的後期原稿展。" },
                     { time: "16:00", title: "豆田町散步", loc: "豆田町", desc: "日田的小京都，適合漫步購物。" },
                     { time: "18:00", title: "抵達酒店", loc: "Green Rich Hotel Kurume", desc: "入住並享用天然溫泉。" },
-                    { time: "20:00", title: "晚餐：TBA", loc: "TBA", desc: "彈性安排。" }
+                    { time: "20:00", title: "晚餐多選方案", loc: "Torisuke / Shohachiro / Vishnu", desc: "備選 1: Torisuke (02:00 關門)\n備選 2: Shohachiro Udon (21:00 關門)\n備選 3: Vishnu (22:00 關門)" }
                 ]},
                 6: { label: "VI", date: "12 JUNE", title: "太宰府參拜 / LaLaport 鋼彈", events: [
                     { time: "10:00", title: "太宰府天滿宮", loc: "太宰府天滿宮", desc: "祈求學業與順利。" },
                     { time: "14:30", title: "LaLaport 福岡", loc: "ららぽーと福岡", desc: "購物中心與 1:1 鋼彈。" },
                     { time: "18:30", title: "晚餐：中洲屋台", loc: "中洲屋台街", desc: "最後一晚的夜生活。" },
-                    { time: "STAY", title: "機場旁住宿", loc: "Vessel Hotel Fukuoka Airport", desc: "入住機場旁方便明日行程。" }
+                    { time: "STAY", title: "酒店休息", loc: "Hotel Vessel Kaizuka", desc: "入住位於貝塚的 Vessel Hotel。" }
                 ]},
                 7: { label: "VII", date: "13 JUNE", title: "最終採買 / 歸途", events: [
                     { time: "10:30", title: "AEON MALL 福岡", loc: "イオンモール福岡", desc: "大型賣場最後掃貨。" },
                     { time: "14:30", title: "Marinoa City", loc: "マリノアシティ福岡", desc: "Outlet 品牌採買。" },
                     { time: "17:30", title: "機場還車", loc: "福岡空港", desc: "辦理手續。" },
-                    { time: "20:35", title: "返程航班", loc: "福岡空港", desc: "搭乘 UO695 返回香港。" }
+                    { time: "20:35", title: "返程航班", loc: "FUK → HKG", desc: "搭乘 UO695 返回香港。" }
                 ]}
             };
 
             const openInGoogleMaps = (location) => {
-                if (location === "TBA") return;
-                const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
+                if (!location || location === "TBA" || location.includes("Torisuke")) return;
+                const searchQuery = location.split(' / ')[0].split(' → ')[0];
+                const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(searchQuery)}`;
                 window.open(url, '_blank');
             };
 
-            const handleDayClick = (day) => {
-                setSelectedDay(day);
-                setCurrentPage('detail');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+            const goBack = () => {
+                setCurrentPage('home');
+                window.scrollTo(0, 0);
             };
 
             return (
-                <div className="min-h-screen text-[#d4af37] selection:bg-[#d4af37] selection:text-black p-4">
-                    {currentPage === 'home' && (
-                        <div className="max-w-3xl mx-auto py-12 md:py-24">
-                            <header className="text-center mb-24 relative">
-                                <p className="text-[10px] tracking-[0.6em] uppercase font-bold text-[#997b2d] mb-6">Private Collection 2026</p>
-                                <h1 className="text-6xl md:text-8xl tracking-[0.2em] font-light mb-8 text-white">FUKUOKA</h1>
-                                <div className="flex justify-center items-center gap-6 text-sm tracking-[0.4em] text-[#997b2d] italic">
+                <div className="min-h-screen text-[#d4af37] p-4 pb-20">
+                    {currentPage === 'home' ? (
+                        <div className="max-w-3xl mx-auto py-12">
+                            <header className="text-center mb-16">
+                                <p className="text-[10px] tracking-[0.6em] uppercase font-bold text-[#997b2d] mb-4">Private Collection 2026</p>
+                                <h1 className="text-6xl md:text-8xl font-light text-white uppercase tracking-widest mb-8">FUKUOKA</h1>
+                                <div className="flex justify-center items-center gap-6 text-[10px] tracking-[0.4em] text-[#997b2d] italic">
                                     <span>06.07</span>
-                                    <Icon name="sparkles" size={14} className="text-[#d4af37]" />
+                                    <Icon name="sparkles" size={12} className="text-[#d4af37]" />
                                     <span>06.13</span>
                                 </div>
                             </header>
-
                             <div className="space-y-6">
-                                {Object.keys(tripData).map((key) => (
-                                    <button
-                                        key={key}
-                                        onClick={() => handleDayClick(key)}
-                                        className="w-full bg-[#111]/50 group relative overflow-hidden p-8 md:p-10 transition-all hover:bg-[#161616] border border-[#2a2418] hover:border-[#d4af37]/30 flex flex-col md:flex-row md:items-center justify-between text-left"
-                                    >
-                                        <div className="flex flex-col space-y-3">
-                                            <div className="flex items-center gap-4">
-                                                <span className="text-[11px] tracking-[0.4em] font-bold text-[#997b2d] uppercase">Day {tripData[key].label}</span>
-                                                <div className="h-px w-8 bg-[#2a2418] group-hover:w-12 group-hover:bg-[#d4af37] transition-all"></div>
-                                                <span className="text-xs text-[#997b2d]/50 font-sans tracking-widest">{tripData[key].date}</span>
+                                {Object.keys(tripData).map(key => (
+                                    <button key={key} onClick={() => { setSelectedDay(key); setCurrentPage('detail'); window.scrollTo(0,0); }} className="w-full bg-[#111] border border-[#2a2418] p-8 text-left hover:border-[#d4af37] transition-all group">
+                                        <div className="flex justify-between items-center">
+                                            <div>
+                                                <div className="text-[11px] text-[#997b2d] mb-2 uppercase tracking-widest font-bold">Day {tripData[key].label} • {tripData[key].date}</div>
+                                                <div className="text-2xl md:text-3xl text-white uppercase tracking-wider group-hover:text-[#d4af37] transition-colors">{tripData[key].title}</div>
                                             </div>
-                                            <h3 className="text-2xl md:text-4xl font-light text-white tracking-widest group-hover:text-[#d4af37] transition-colors uppercase">
-                                                {tripData[key].title}
-                                            </h3>
-                                        </div>
-                                        <div className="mt-6 md:mt-0 flex items-center gap-4 text-[#997b2d]">
-                                            <div className="w-12 h-12 rounded-full border border-[#2a2418] group-hover:border-[#d4af37] flex items-center justify-center transition-all group-hover:bg-[#d4af37]/5">
-                                                <Icon name="chevron-right" size={20} />
+                                            <div className="w-10 h-10 rounded-full border border-[#2a2418] flex items-center justify-center group-hover:border-[#d4af37] group-hover:bg-[#d4af37]/5 transition-all">
+                                                <Icon name="chevron-right" size={20} className="text-[#997b2d]" />
                                             </div>
                                         </div>
                                     </button>
                                 ))}
                             </div>
                         </div>
-                    )}
-
-                    {currentPage === 'detail' && selectedDay && (
-                        <div className="max-w-2xl mx-auto py-12 md:py-20">
-                            <button 
-                                onClick={() => setCurrentPage('home')}
-                                className="group flex items-center gap-3 text-[10px] tracking-[0.3em] uppercase font-bold mb-20 text-[#997b2d] hover:text-[#d4af37] transition-colors"
-                            >
-                                <Icon name="arrow-left" size={16} /> Back to Collection
+                    ) : (
+                        <div className="max-w-2xl mx-auto py-12">
+                            <button onClick={goBack} className="mb-12 text-[10px] uppercase tracking-[0.4em] flex items-center gap-2 hover:text-white transition-colors font-bold text-[#997b2d]">
+                                <Icon name="arrow-left" size={14} /> Back to Collection
                             </button>
-
-                            <header className="mb-32">
-                                <span className="text-[11px] tracking-[0.4em] font-bold uppercase text-[#997b2d] block mb-6 italic underline underline-offset-8">Episode {tripData[selectedDay].label}</span>
-                                <h2 className="text-4xl md:text-6xl tracking-[0.1em] font-light text-white uppercase leading-[1.2] mb-8">
+                            <header className="mb-24">
+                                <span className="text-[11px] tracking-[0.4em] font-bold uppercase text-[#997b2d] block mb-4 italic underline underline-offset-8">Episode {tripData[selectedDay].label}</span>
+                                <h2 className="text-4xl md:text-5xl text-white uppercase tracking-tight italic">
                                     {tripData[selectedDay].title}
                                 </h2>
-                                <p className="text-[#997b2d] italic text-sm tracking-widest">{tripData[selectedDay].date}</p>
                             </header>
-
-                            <div className="space-y-24">
-                                {tripData[selectedDay].events.map((event, index) => (
-                                    <div key={index} className="group relative border-l border-[#2a2418] pl-8 pb-12">
-                                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-                                            <span className="text-3xl font-light text-white">{event.time}</span>
-                                            <div className="flex items-center gap-3">
-                                                <span className="text-[10px] tracking-[0.2em] font-bold uppercase text-[#997b2d] px-4 py-1 bg-[#1a1711] rounded-full border border-[#2a2418]">
-                                                    {event.loc}
-                                                </span>
-                                                {event.loc !== "TBA" && (
-                                                    <button onClick={() => openInGoogleMaps(event.loc)} className="text-[#997b2d] hover:text-[#d4af37]">
-                                                        <Icon name="map" size={14} />
+                            
+                            <div className="space-y-20">
+                                {tripData[selectedDay].events.map((event, i) => (
+                                    <div key={i} className="border-l border-[#2a2418] pl-8 relative pb-4">
+                                        <div className="flex flex-col gap-4 mb-4">
+                                            <div className="text-4xl text-white font-light tracking-tighter">{event.time}</div>
+                                            <div className="flex items-center gap-4">
+                                                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#121212] border border-[#2a2418] rounded-full text-[10px] uppercase tracking-widest font-bold text-[#997b2d]">
+                                                    <Icon name="map-pin" size={12} /> {event.loc}
+                                                </div>
+                                                {(!event.loc.includes("TBA") && !event.loc.includes("/") && event.loc !== "HKG → FUK") && (
+                                                    <button 
+                                                        onClick={() => openInGoogleMaps(event.loc)} 
+                                                        className="w-8 h-8 rounded-full border border-[#d4af37] flex items-center justify-center text-[#d4af37] luxury-hover transition-all"
+                                                        title="View on Map"
+                                                    >
+                                                        <Icon name="compass" size={16} />
                                                     </button>
                                                 )}
                                             </div>
                                         </div>
-                                        <h4 className="text-xl md:text-2xl text-white uppercase mb-4">{event.title}</h4>
-                                        <p className="text-[#997b2d]/80 text-sm leading-loose">{event.desc}</p>
+                                        <div className="text-white text-xl mb-3 uppercase tracking-widest font-bold">{event.title}</div>
+                                        <div className="text-[#997b2d] text-sm whitespace-pre-line leading-relaxed italic opacity-80">{event.desc}</div>
                                     </div>
                                 ))}
+                            </div>
+                            
+                            <div className="mt-24 pt-16 border-t border-[#2a2418] flex justify-center">
+                                <button 
+                                    onClick={goBack}
+                                    className="px-16 py-5 border border-[#d4af37] text-[#d4af37] text-[11px] uppercase tracking-[0.5em] font-bold luxury-btn-hover transition-all"
+                                >
+                                    Back to Collection
+                                </button>
                             </div>
                         </div>
                     )}
